@@ -1,18 +1,14 @@
-"""Julia set generator without optional PIL-based image drawing"""
-import time
-
-import os
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+from PIL import ImageDraw, Image
 from time_wrapper import timefn
 
 # площадь исследуемой комплексной плоскости
 x1, x2, y1, y2 = -1.8, 1.8, -1.8, 1.8
 c_real, c_imag = -0.62772, -.42193
+desired_width = 5000
+img = Image.new('RGB', (desired_width, desired_width))
 
 
-def calculate_z_serial_purepython(max_iter, zs, cs):
+def calculate_z_serial_purepython(max_iter, zs, cs, pil_coord):
     """Calculate output list using Julia update rule"""
     output = [0] * len(zs)
     for i in range(len(zs)):
@@ -23,11 +19,12 @@ def calculate_z_serial_purepython(max_iter, zs, cs):
             z = z * z + c
             n += 1
         output[i] = n
+        img.putpixel(xy=pil_coord[i], value=(min(n, 256), min(n, 256), min(n, 256)))
     return output
 
 
 @timefn
-def calc_pure_python(desired_width: int, max_iterations: int):
+def draw_pure_python(desired_width: int, max_iterations: int):
     """Create a list of complex coordinates (zs) and
     complex parameters (cs), build Julia set"""
     x_step = (x2 - x1) / desired_width
@@ -49,25 +46,18 @@ def calc_pure_python(desired_width: int, max_iterations: int):
     # моделирования реального сценария
     zs = []
     cs = []
-    for y_coord in y:
-        for x_coord in x:
+    pil_coord = []
+    for i, y_coord in enumerate(y):
+        for j, x_coord in enumerate(x):
             zs.append(complex(x_coord, y_coord))
             cs.append(complex(c_real, c_imag))
-    print("Length of x: ", len(x))
-    print("Total elements: ", len(zs))
-    start_time = time.time()
-    output = calculate_z_serial_purepython(max_iterations, zs, cs)
-    end_time = time.time()
-    secs = end_time - start_time
-    print(calculate_z_serial_purepython.__name__ + " took", secs, "seconds")
-    # Сумма для сетки 1000 на 1000 за 300 итераций
-    # проверка, что код работает как ожидалось
-    if desired_width == 1000 and max_iterations == 300:
-        assert sum(output) == 33219980
-    return output
+            pil_coord.append((i, j))
+    output = calculate_z_serial_purepython(max_iterations, zs, cs, pil_coord)
 
 
 if __name__ == "__main__":
-    # вычисляем множество Жюлиа на чистом Python
+    # рисуем множество Жюлиа на чистом Python
     # с разумными для ноутбука параметрами
-    calc_pure_python(desired_width=1000, max_iterations=300)
+    draw_pure_python(desired_width=desired_width, max_iterations=300)
+    name = f"julia_set_{desired_width}.png"
+    img.save(name)
