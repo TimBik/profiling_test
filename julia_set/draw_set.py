@@ -59,5 +59,5 @@ if __name__ == "__main__":
     # рисуем множество Жюлиа на чистом Python
     # с разумными для ноутбука параметрами
     draw_pure_python(desired_width=desired_width, max_iterations=300)
-    name = f"julia_set_{desired_width}.png"
+    name = f"sets/julia_set_{desired_width}.png"
     img.save(name)
