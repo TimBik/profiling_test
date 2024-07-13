@@ -1,6 +1,10 @@
 """Julia set generator without optional PIL-based image drawing"""
 import time
 
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from time_wrapper import timefn
 
 # площадь исследуемой комплексной плоскости

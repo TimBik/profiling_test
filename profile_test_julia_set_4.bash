@@ -1,0 +1,1 @@
+python -m cProfile -s cumulative julia_set/set_1.py
