@@ -4,7 +4,7 @@ from time_wrapper import timefn
 # площадь исследуемой комплексной плоскости
 x1, x2, y1, y2 = -1.8, 1.8, -1.8, 1.8
 c_real, c_imag = -0.62772, -.42193
-desired_width = 5000
+desired_width = 10000
 img = Image.new('RGB', (desired_width, desired_width))
 
 

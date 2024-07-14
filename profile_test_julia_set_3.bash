@@ -1,4 +1,4 @@
 #linux
-#/usr/bin/time -verbose python "julia_set/set_1.py"
+#/usr/bin/time -verbose python "julia_set/calculate_set_1.py"
 # for mac
-gtime --verbose python "julia_set/set_1.py"
+gtime --verbose python "julia_set/calculate_set_1.py"
